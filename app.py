@@ -43,6 +43,8 @@ class PredictionRequest(BaseModel):
 
 
 class PredictionResponse(BaseModel):
+    model_config = {"protected_namespaces": ()}
+
     month: str
     year: int
     predicted_expense: float
