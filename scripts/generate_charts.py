@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
 import numpy as np
@@ -8,6 +9,14 @@ import numpy as np
 INPUT_PATH = "data/spending.xlsx"
 OUTPUT_DIR = "charts"
 
+# Use a font stack that includes the manat sign (₼) on Windows.
+mpl.rcParams["font.sans-serif"] = [
+    "Segoe UI Symbol",
+    "Segoe UI",
+    "Arial Unicode MS",
+    "DejaVu Sans",
+]
+mpl.rcParams["font.family"] = "sans-serif"
 # Consistent professional palette
 C = {
     "navy":    "#1f4e79",
@@ -93,7 +102,7 @@ def save_chart(fig, filename):
     fig.tight_layout()
     fig.savefig(path, dpi=180, bbox_inches="tight")
     plt.close(fig)
-    print(f"  ✓ {filename}")
+    print(f"  OK {filename}")
 
 
 # ── 1. Total Spend by Category (with avg line + value labels) ─────────────────
@@ -220,7 +229,7 @@ def chart_cumulative_spend(df):
             ax.axhline(milestone, color=C["muted"], linestyle="--", linewidth=1, alpha=0.7)
             ax.text(
                 dates[0], milestone + 1_200,
-                f"${milestone // 1000}k",
+                f"{milestone // 1000}k",
                 fontsize=8, color=C["muted"],
             )
 
@@ -288,7 +297,7 @@ def chart_frequency_vs_value(df):
     # Avg transaction size embedded inside each bar
     for i, (_, row) in enumerate(by_cat.iterrows()):
         if row["total_spend"] > 1000:
-            ax1.text(i, row["total_spend"] / 2, f"avg\n${row['avg']:.0f}",
+            ax1.text(i, row["total_spend"] / 2, f"avg\n{row['avg']:.0f}",
                      ha="center", va="center", fontsize=7, color="white", fontweight="bold")
 
     ax2 = ax1.twinx()
@@ -362,7 +371,7 @@ def chart_avg_transaction_trend(df):
 
     year_xticks(ax, monthly_avg.index)
     ax.set_title("Average Transaction Size Over Time (Habit Drift)", fontsize=14, fontweight="bold", pad=12)
-    ax.set_ylabel("Avg Transaction ($)")
+    ax.set_ylabel("Avg Transaction")
     format_currency(ax)
     ax.legend(fontsize=9)
     save_chart(fig, "avg_transaction_trend.png")
@@ -427,7 +436,7 @@ def main():
     chart_avg_transaction_trend(df)
     chart_category_yoy(df)
 
-    print(f"\nDone — 11 charts saved to {OUTPUT_DIR}/")
+    print(f"\nDone - 11 charts saved to {OUTPUT_DIR}/")
 
 
 if __name__ == "__main__":

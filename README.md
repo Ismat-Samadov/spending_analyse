@@ -1,5 +1,5 @@
 **Spending Snapshot (Jul 2022–Feb 2026)**
-Over 44 months I spent $102,321 across 6,606 transactions in 23 categories. This document distills that data into the decisions that actually move the total — not micro-optimizations, but the few levers that shape the budget path.
+Over 44 months I spent 102,321 AZN across 6,606 transactions in 23 categories. This document distills that data into the decisions that actually move the total — not micro-optimizations, but the few levers that shape the budget path.
 
 **Key Findings**
 - Three categories (Restaurant, Coffee, Market) account for nearly half of all transactions but under 45% of total spend — high frequency, moderate damage.
@@ -54,13 +54,13 @@ How this guides decisions:
 **4) Cumulative Pace: How the Budget Path Was Set**
 ![Cumulative Spend Over 44 Months](charts/cumulative_spend.png)
 
-What the chart shows: The cumulative spend curve from day one to the present, with milestone markers at $25k, $50k, $75k, and $100k. The shaded area shows total committed spend at any point in time.
+What the chart shows: The cumulative spend curve from day one to the present, with milestone markers at 25k AZN, 50k AZN, 75k AZN, and 100k AZN. The shaded area shows total committed spend at any point in time.
 
 Why this matters: The slope of this curve is determined early. Large early-period expenses lock in the trajectory and compress the room to maneuver later.
 
 How this guides decisions:
 - Large planned expenses are scheduled to avoid clustering in the same quarter.
-- The $100k milestone was crossed before February 2026 — awareness of the pace informs what the next 12 months should look like.
+- The 100k AZN milestone was crossed before February 2026 — awareness of the pace informs what the next 12 months should look like.
 
 ---
 

@@ -11,7 +11,7 @@ Reference charts:
 - `charts/total_spend_by_category.png`
 - `charts/spend_concentration.png`
 
-What the data shows: The average reference line on the category chart separates the high-impact categories from the long tail. The concentration chart confirms that the top categories collectively dominate the total, with each bar showing both the dollar amount and the percentage share.
+What the data shows: The average reference line on the category chart separates the high-impact categories from the long tail. The concentration chart confirms that the top categories collectively dominate the total, with each bar showing both the manat amount and the percentage share.
 
 Strategy rules:
 - Set caps only on categories that appear above the average line. Categories below it are not worth the attention.
@@ -48,11 +48,11 @@ Strategy rules:
 Reference charts:
 - `charts/cumulative_spend.png`
 
-What the data shows: The cumulative curve with milestone markers ($25k, $50k, $75k, $100k) shows the pace of committed spend at any point in time. If the curve reaches a milestone ahead of schedule, the remaining months must compensate.
+What the data shows: The cumulative curve with milestone markers (25k AZN, 50k AZN, 75k AZN, 100k AZN) shows the pace of committed spend at any point in time. If the curve reaches a milestone ahead of schedule, the remaining months must compensate.
 
 Strategy rules:
 - At each milestone, pause and assess whether the pace is consistent with the annual target.
-- If $50k is reached before the end of July (month 6 of 12), the second half of the year needs to average less than the first half to stay on track.
+- If 50k AZN is reached before the end of July (month 6 of 12), the second half of the year needs to average less than the first half to stay on track.
 - Schedule large known expenses to land after a milestone, not before — this prevents the curve from accelerating ahead of plan.
 
 ---
