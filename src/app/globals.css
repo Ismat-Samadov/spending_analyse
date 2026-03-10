@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #0a0a1a;
+  --bg-secondary: #111128;
+  --neon-cyan: #00ffe0;
+  --neon-violet: #9333ea;
+  --neon-green: #00ff99;
+  --background: #0a0a1a;
+  --foreground: #e2e8f0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--foreground);
+  overscroll-behavior: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+/* Neon glow utilities */
+.neon-text-cyan {
+  text-shadow: 0 0 8px rgba(0, 255, 224, 0.8), 0 0 20px rgba(0, 255, 224, 0.4);
+}
+.neon-text-violet {
+  text-shadow: 0 0 8px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.4);
+}
+
+/* Prevent text selection on canvas */
+canvas {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Ambient background grid pattern */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(0, 255, 224, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 224, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
