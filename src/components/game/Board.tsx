@@ -61,35 +61,43 @@ export default function Board({ state, onPointClick, onMoveClick }: BoardProps) 
       const boardW = W - barW - bearW;
       const colW = (boardW - barW) / 12;
 
-      // Bar click?
+      // Bear-off area is on the LEFT side (x=0..bearW)
+      if (x < bearW) {
+        // Return WHITE_BEAROFF or BLACK_BEAROFF so the caller can detect it
+        return state.currentPlayer === 'white' ? WHITE_BEAROFF : BLACK_BEAROFF;
+      }
+
+      // Bar click? Bar starts at bearW + 6*colW
       const barLeft = colW * 6 + bearW;
       if (x >= barLeft && x <= barLeft + barW) {
         return state.currentPlayer === 'white' ? WHITE_BAR : BLACK_BAR;
       }
 
-      // Bear-off area (right side)
-      if (x > W - bearW) return -1;
-
-      // Map x to column index (0–11 left half, then bar, then 6–11 right half)
+      // Map x to column index 0–11
+      // Left six columns:  bearW + col*colW          (col 0..5)
+      // Right six columns: bearW + barW + col*colW   (col 6..11)
       let col: number;
       const adjustedX = x - bearW;
       if (adjustedX < colW * 6) {
+        // Left half: col 0..5
         col = Math.floor(adjustedX / colW);
       } else {
-        col = Math.floor((adjustedX - barW) / colW) + 6;
+        // Right half: subtract barW offset, gives col 6..11
+        col = Math.floor((adjustedX - barW) / colW);
+        // Bug fix: do NOT add 6; the formula already produces 6–11
       }
       col = Math.max(0, Math.min(11, col));
 
       const isTop = y < H / 2;
 
-      // Standard board layout:
-      // Top row (from left): points 13–24 → indices 12–23
-      // Bottom row (from left): points 12–1  → indices 11–0
+      // Board layout:
+      // Top row  (left→right): col 0→11  maps to indices 12→23
+      // Bottom row (left→right): col 0→11  maps to indices 11→0
       let pointIndex: number;
       if (isTop) {
-        pointIndex = 12 + col; // 12..23
+        pointIndex = 12 + col;
       } else {
-        pointIndex = 11 - col; // 11..0
+        pointIndex = 11 - col;
       }
 
       return pointIndex;
@@ -108,31 +116,20 @@ export default function Board({ state, onPointClick, onMoveClick }: BoardProps) 
       const y = (e.clientY - rect.top) * scaleY;
 
       const target = getClickTarget(canvas, x, y);
-      if (target === null || target === -1) return;
+      if (target === null) return;
 
-      // Check if it's a valid move destination
+      // Valid move destination (includes bear-off indices 26/27)?
       if (state.validMoves.includes(target)) {
-        // Find the move
-        const color = state.currentPlayer;
-        const remaining = getRemainingDice(state);
-        for (const die of new Set(remaining)) {
-          if (state.selectedPoint !== null) {
-            const mvs = legalMovesFrom(state, color, state.selectedPoint, die);
-            const mv = mvs.find((m) => m.to === target);
-            if (mv) {
-              onMoveClick(target);
-              return;
-            }
-          }
-        }
         onMoveClick(target);
         return;
       }
 
-      // Otherwise select the point
+      // Otherwise try to select a checker on that point
+      // (ignore bear-off zone when no bear-off move available)
+      if (target === WHITE_BEAROFF || target === BLACK_BEAROFF) return;
       onPointClick(target);
     },
-    [state, getClickTarget, onPointClick, onMoveClick]
+    [state.validMoves, getClickTarget, onPointClick, onMoveClick]
   );
 
   const handleTouch = useCallback(
@@ -148,15 +145,15 @@ export default function Board({ state, onPointClick, onMoveClick }: BoardProps) 
       const y = (touch.clientY - rect.top) * scaleY;
 
       const target = getClickTarget(canvas, x, y);
-      if (target === null || target === -1) return;
+      if (target === null) return;
 
       if (state.validMoves.includes(target)) {
         onMoveClick(target);
-      } else {
+      } else if (target !== WHITE_BEAROFF && target !== BLACK_BEAROFF) {
         onPointClick(target);
       }
     },
-    [state, getClickTarget, onPointClick, onMoveClick]
+    [state.validMoves, getClickTarget, onPointClick, onMoveClick]
   );
 
   // ── Draw ──────────────────────────────────────────────────
@@ -403,6 +400,29 @@ export default function Board({ state, onPointClick, onMoveClick }: BoardProps) 
     }
 
     // ── Valid move indicators ─────────────────────────────────
+    const hasBearOffMove = state.validMoves.includes(WHITE_BEAROFF) || state.validMoves.includes(BLACK_BEAROFF);
+
+    // Glow the bear-off zone when a bear-off move is available
+    if (hasBearOffMove) {
+      ctx.strokeStyle = COLORS.validMoveBorder;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = COLORS.validMoveBorder;
+      ctx.shadowBlur = 16;
+      ctx.strokeRect(2, 2, bearW - 4, H - 4);
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = COLORS.validMove;
+      ctx.fillRect(2, 2, bearW - 4, H - 4);
+      // Label
+      ctx.save();
+      ctx.translate(bearW / 2, H / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = COLORS.validMoveBorder;
+      ctx.font = `bold ${Math.max(9, bearW * 0.22)}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('BEAR OFF!', 0, 0);
+      ctx.restore();
+    }
+
     for (const dest of state.validMoves) {
       if (dest >= 0 && dest < 24) {
         const col = dest >= 12 ? dest - 12 : 11 - dest;
@@ -416,7 +436,7 @@ export default function Board({ state, onPointClick, onMoveClick }: BoardProps) 
           ? checkerR + numCheckers * spacing
           : H - checkerR - numCheckers * spacing;
 
-        // Pulsing circle indicator
+        // Circle indicator
         ctx.beginPath();
         ctx.arc(cx, stackY, checkerR * 0.7, 0, Math.PI * 2);
         ctx.fillStyle = COLORS.validMove;

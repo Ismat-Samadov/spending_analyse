@@ -120,7 +120,9 @@ export function legalMovesFrom(
       if (to === 24) {
         moves.push({ from, to: BLACK_BEAROFF, dieUsed: die });
       } else if (to > 24) {
-        const higherOccupied = BLACK_HOME.slice(0, from - 17).some(
+        // Over-roll allowed only when no checkers on higher-indexed home points
+        // BLACK_HOME = [18..23]; from-18 is its index; slice from next gives higher points
+        const higherOccupied = BLACK_HOME.slice(from - 17).some(
           (i) => state.points[i].checkers.some((c) => c === 'black')
         );
         if (!higherOccupied) {
